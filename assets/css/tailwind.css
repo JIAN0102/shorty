@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply relative bg-black text-white/70;
+}
+
+body::before {
+  content: "";
+  @apply fixed top-0 left-0 -z-[1] w-full h-full;
+  background: radial-gradient(
+    75.61% 75.61% at 50% 24.39%,
+    rgba(180, 83, 9, 0.2) 0,
+    rgba(180, 83, 9, 0) 100%
+  );
+}
+
+.container {
+  @apply max-w-5xl px-5 mx-auto;
+}
+
+.bg-blur {
+  @apply bg-black/20 backdrop-blur-md;
+}
+
+.btn {
+  @apply inline-block px-4 py-2 rounded-full;
+}
+
+.btn-primary {
+  @apply bg-white/80;
+  background: linear-gradient(92.35deg, #d97706 -5.27%, #f59e0b 96.04%);
+}
+
+.card {
+  @apply min-w-[350px] p-5 bg-white/5 rounded-xl border border-white/10 backdrop-blur-md;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  @apply w-full p-2 bg-transparent border border-white/20 rounded-lg;
+}
+
+form label {
+  @apply block mb-1 text-sm text-white/70;
+}
+
+.form-group {
+  @apply mb-5;
+}
