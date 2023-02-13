@@ -2,16 +2,73 @@
  * @Author:Jim Chen
  * @Date:2023-02-13 09:10:25
  * @LastEditors:Jim Chen
- * @LastEditTime:2023-02-13 09:48:19
+ * @LastEditTime:2023-02-13 14:09:21
  * @Description:
 -->
 <script setup lang="ts">
-const supabaseAuth = useSupabaseAuthClient();
+const client = useSupabaseAuthClient();
+
+const isLoggingIn = ref<boolean>(true);
+const form = reactive({
+  email: "",
+  password: "",
+});
+
+const errors = ref<string>("");
 
 const handleGithubLogin = () => {
-  supabaseAuth.auth.signInWithOAuth({
+  client.auth.signInWithOAuth({
     provider: "github",
   });
+};
+
+const handleLoginForm = async () => {
+  if (!form.email || !form.password) {
+    errors.value = "Please fill all the fields";
+    return;
+  }
+
+  if (!isLoggingIn.value) {
+    return handleSignup();
+  }
+
+  try {
+    const { data, error } = await client.auth.signInWithPassword({
+      email: form.email,
+      password: form.password,
+    });
+
+    if (error) {
+      errors.value = error.message;
+      return;
+    }
+
+    errors.value = "";
+
+    await navigateTo("/dashboard");
+  } catch (err) {
+    errors.value = "Something went wrong";
+  }
+};
+
+const handleSignup = async () => {
+  try {
+    const { data, error } = await client.auth.signUp({
+      email: form.email,
+      password: form.password,
+    });
+
+    if (error) {
+      errors.value = error.message;
+      return;
+    }
+
+    console.log(data);
+
+    errors.value = "Please check your email t verify your account";
+  } catch (err) {
+    errors.value = "Something went wrong";
+  }
 };
 </script>
 
@@ -47,7 +104,7 @@ const handleGithubLogin = () => {
 
         <hr class="my-8 border-white/10" />
 
-        <form>
+        <form @submit.prevent="handleLoginForm">
           <div class="form-group">
             <label for="email">Email</label>
             <input
@@ -55,18 +112,39 @@ const handleGithubLogin = () => {
               name="email"
               id="email"
               placeholder="jim.chen@gmail.com"
+              class="placeholder:text-white/30"
+              v-model="form.email"
             />
           </div>
           <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" name="password" id="password" />
+            <input
+              type="password"
+              name="password"
+              id="password"
+              v-model="form.password"
+            />
           </div>
           <button
             type="submit"
             class="btn-primary w-full py-3 mt-3 rounded-full"
           >
-            Login
+            {{ isLoggingIn ? "Login" : "Signup" }}
           </button>
+
+          <div class="mt-5 text-center">
+            <button type="button" @click="isLoggingIn = !isLoggingIn">
+              {{
+                isLoggingIn
+                  ? "Don't have an account? Signup"
+                  : "Already have an account? Login"
+              }}
+            </button>
+          </div>
+
+          <div class="mt-5 text-red-500 text-center">
+            {{ errors }}
+          </div>
         </form>
       </div>
     </div>

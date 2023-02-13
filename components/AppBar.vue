@@ -1,4 +1,14 @@
+<!--
+ * @Author:Jim Chen
+ * @Date:2023-02-13 09:10:25
+ * @LastEditors:Jim Chen
+ * @LastEditTime:2023-02-13 14:22:57
+ * @Description:
+-->
 <script setup lang="ts">
+const client = useSupabaseAuthClient();
+const user = useSupabaseUser();
+
 const navLinks = ref<
   {
     to: string;
@@ -18,6 +28,11 @@ const navLinks = ref<
     label: "Contact",
   },
 ]);
+
+const handleLogout = async () => {
+  await client.auth.signOut();
+  navigateTo("/");
+};
 </script>
 
 <template>
@@ -33,7 +48,7 @@ const navLinks = ref<
         <li v-for="link in navLinks" :key="link.to">
           <NuxtLink :to="link.to">{{ link.label }}</NuxtLink>
         </li>
-        <li>
+        <li v-if="!user">
           <NuxtLink
             :to="{
               name: 'auth',
@@ -41,6 +56,9 @@ const navLinks = ref<
             class="btn btn-primary"
             >Sign In</NuxtLink
           >
+        </li>
+        <li v-else>
+          <button @click="handleLogout">Logout</button>
         </li>
       </ul>
     </nav>

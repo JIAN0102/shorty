@@ -1,11 +1,19 @@
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
   link: {
-    id: string;
+    id: number;
     shortKey: string;
     longUrl: string;
   };
 }>();
+
+const config = useRuntimeConfig();
+
+const handleCopy = () => {
+  navigator.clipboard.writeText(
+    `${config.public.appUrl}/${props.link.shortKey}`
+  );
+};
 </script>
 
 <template>
@@ -13,11 +21,12 @@ defineProps<{
     <div class="link-info">
       <div class="font-bold text-2xl text-amber-500">{{ link.shortKey }}</div>
       <div class="text-sm text-white/40">
-        {{ link.longUrl }}
+        {{ link.longUrl.slice(0, 20) + "..." }}
       </div>
     </div>
     <button
       class="btn-primary grid place-content-center w-12 h-12 rounded-full"
+      @click="handleCopy"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
