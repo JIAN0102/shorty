@@ -1,3 +1,10 @@
+<!--
+ * @Author:Jim Chen
+ * @Date:2023-02-13 09:10:25
+ * @LastEditors:Jim Chen
+ * @LastEditTime:2023-02-13 09:29:26
+ * @Description:
+-->
 <template>
   <section class="h-screen grid place-content-center">
     <div class="max-w-3xl mx-auto text-center">

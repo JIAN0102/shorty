@@ -1,4 +1,19 @@
-<script setup lang="ts"></script>
+<!--
+ * @Author:Jim Chen
+ * @Date:2023-02-13 09:10:25
+ * @LastEditors:Jim Chen
+ * @LastEditTime:2023-02-13 09:48:19
+ * @Description:
+-->
+<script setup lang="ts">
+const supabaseAuth = useSupabaseAuthClient();
+
+const handleGithubLogin = () => {
+  supabaseAuth.auth.signInWithOAuth({
+    provider: "github",
+  });
+};
+</script>
 
 <template>
   <section class="h-screen grid place-content-center">
@@ -23,7 +38,10 @@
           </svg>
         </div>
 
-        <button class="btn-primary w-full py-3 mt-5 rounded-full">
+        <button
+          class="btn-primary w-full py-3 mt-5 rounded-full"
+          @click="handleGithubLogin"
+        >
           Continue with Github
         </button>
 
